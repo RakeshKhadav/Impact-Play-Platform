@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 type AuthActionState = {
   error: string;
@@ -76,14 +77,14 @@ export async function signupAction(_prevState: AuthActionState, formData: FormDa
   }
 
   if (data.user) {
-    const { error: profileError } = await supabase.from("profiles").upsert(
+    const adminSupabase = createSupabaseAdminClient();
+    const { error: profileError } = await adminSupabase.from("profiles").upsert(
       {
         id: data.user.id,
         full_name: parsed.data.fullName,
         email: parsed.data.email,
         role: "subscriber" as const,
         charity_id: parsed.data.charityId ?? null,
-        charity_contribution_percentage: parsed.data.charityId ? 10 : undefined,
       },
       {
         onConflict: "id",

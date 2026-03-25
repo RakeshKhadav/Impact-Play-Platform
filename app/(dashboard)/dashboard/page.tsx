@@ -84,9 +84,9 @@ export default async function DashboardPage() {
   const drawIds = Array.from(new Set([...participants.map((row) => row.draw_id), ...winners.map((row) => row.draw_id)]));
   const { data: drawRows } = drawIds.length
     ? await supabase
-        .from("draws")
-        .select("id, title, draw_month, status")
-        .in("id", drawIds)
+      .from("draws")
+      .select("id, title, draw_month, status")
+      .in("id", drawIds)
     : { data: [] as Array<{ id: string; title: string; draw_month: string; status: "draft" | "simulated" | "published" }> };
 
   const drawById = (drawRows ?? []).reduce((acc, draw) => {
@@ -126,7 +126,7 @@ export default async function DashboardPage() {
   ].filter(Boolean) as string[];
 
   return (
-    <DashboardClient 
+    <DashboardClient
       profile={profile}
       scores={scores}
       charities={charities}
