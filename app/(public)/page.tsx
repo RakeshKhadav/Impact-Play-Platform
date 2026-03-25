@@ -20,7 +20,7 @@ export default async function HomePage() {
     supabase.from("charities").select("id", { count: "exact", head: true }).eq("is_active", true).eq("is_published", true),
     supabase
       .from("draws")
-      .select("id, title, draw_month, charity_pool, winner_pool, eligible_participants")
+      .select("id, title, draw_month, charity_pool, winner_pool, eligible_count")
       .eq("status", "published")
       .order("draw_month", { ascending: false })
       .limit(1)
@@ -37,7 +37,7 @@ export default async function HomePage() {
 
   const metrics = [
     { label: "Total Raised", value: `₹${formatMoney((latestPublishedDraw?.charity_pool ?? 0) * 12)}` }, // Simplified lifetime estimation for visual MVP
-    { label: "Lives Impacted", value: (latestPublishedDraw?.eligible_participants ?? 0).toLocaleString() }, // Mock impact multiplier
+    { label: "Lives Impacted", value: (latestPublishedDraw?.eligible_count ?? 0).toLocaleString() }, // Mock impact multiplier
     { label: "Monthly Prize Pool", value: `₹${formatMoney(latestPublishedDraw?.winner_pool ?? 0)}` },
   ];
 
